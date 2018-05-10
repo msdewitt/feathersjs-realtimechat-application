@@ -35,23 +35,6 @@
   </div>
   </main>`;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const chatHTML = `<main class="flex flex-column">
   <header class="title-bar flex flex-row flex-center">
   <div class="title-wrapper block center-element">
@@ -130,7 +113,7 @@ const showLogin = (error={}) => {
     : document.getElementById('app').innerHTML = loginHTML;
   }
   const showChat = async () => {
-    document.getElementById('app').innerHtml = chatHtml;
+    document.getElementById('app').innerHtml = chatHTML;
 
   const messages = await client.service('messages').find({
     query: {
@@ -146,50 +129,95 @@ const showLogin = (error={}) => {
 };
 
 const getCredentials = () => {
-const user = {
-email: document.querySelector('[name="email"]').value,
-password: document.querySelector('[name="password"]').value
+  return{
+    email: document.querySelector('[name = "email"]').value,
+    password: document.querySelector('[name="password"]').value
+  };
 };
-return user;
-};
-// Log in either using the given email/password or the token from storage
+
 const login = async credentials => {
-try {
-if(!credentials) {
-// Try to authenticate using the JWT from localStorage
-await client.authenticate();
-} else {
-// If we get login information, add the strategy we want to use for login
-const payload = Object.assign({ strategy: 'local' }, credentials);
-await client.authenticate(payload);
-}
-// If successful, show the chat page
-showChat();
-} catch(error) {
-// If we got an error, show the login page
-showLogin(error);
-}
+  try {
+    if(!credentials){
+      await client.authenticate()
+    } else {
+      const payload = Object.assign({strategy: 'local'}, credentials);
+      await client.authenticate(payload);
+    }
+  showChat();
+  } catch(error) {
+      showLogin(error);
+  }
 };
+
 document.addEventListener('click', async ev => {
-switch(ev.target.id) {
-case 'signup': {
-// For signup, create a new user and then log them in
-const credentials = getCredentials();
-// First create the user
-await client.service('users').create(credentials);
-// If successful log them in
-await login(credentials);
-break;
-}
-case 'login': {
-const user = getCredentials();
-await login(user);
-break;
-}
-case 'logout': {
-await client.logout();
-document.getElementById('app').innerHTML = loginHTML;
-break;
-}
-}
+  switch(ev.target.id) {
+    case 'signup': {
+      const credentials = getCredentials();
+      // First create the user
+      await client.service('users').create(credentials);
+      //If successful log them in
+      await login(credentials);
+      break;
+    }
+    case 'login': {
+      const user = getCredentials();
+      await login(user);
+      break;
+    }
+    case 'logout': {
+      await client.logout();
+      document.getElementById('app').innerHTML = loginHTML;
+      break;
+    }
+  }
 });
+
+document.addEventListener('submit', async ev => {
+  if(ev.target.id === 'send-message'){
+    const input = document.querySelector('[name="text"]');
+    ev.preventDefault();
+    await client.service('messages').create({
+      text: input.value
+    });
+    input.value = '';
+  }
+});
+
+client.service('messages').on('created', addMessage);
+client.service('users').on('created', addUser);
+login();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Hello
