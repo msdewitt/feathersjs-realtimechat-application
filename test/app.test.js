@@ -21,7 +21,7 @@ describe('Feathers application tests', () => {
     this.server.close(done);
   });
 
-  xit('starts and shows the index page', () => {
+  it('starts and shows the index page', () => {
     return rp(getUrl()).then(body =>
       assert.ok(body.indexOf('<html>') !== -1)
     );

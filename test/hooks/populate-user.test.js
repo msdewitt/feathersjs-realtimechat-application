@@ -5,7 +5,7 @@ const populateUser = require('../../src/hooks/populate-user');
 
 describe('\'populate-user\' hook', () => {
   let app, user;
-
+  
   beforeEach(async () => {
     // Database adapter pagination options
     const options = {
@@ -16,7 +16,7 @@ describe('\'populate-user\' hook', () => {
     };
 
     app = feathers();
-
+    
     // Register `users` and `messages` service in-memory
     app.use('/users', memory(options));
     app.use('/messages', memory(options));
@@ -31,7 +31,7 @@ describe('\'populate-user\' hook', () => {
       email: 'test@user.com'
     });
   });
-
+  
   it('populates a new message with the user', async () => {
     const message = await app.service('messages').create({
       text: 'A test message',

@@ -7,15 +7,17 @@ describe('\'gravatar\' hook', () => {
 
   beforeEach(() => {
     app = feathers();
-
+    
+    // A dummy users service for testing
     app.use('/users', {
       async create(data) {
         return data;
       }
     });
 
+    // Add the hook to the dummy service
     app.service('users').hooks({
-      before:{
+      before: {
         create: gravatar()
       }
     });
@@ -26,28 +28,9 @@ describe('\'gravatar\' hook', () => {
       email: 'test@example.com'
     });
 
-
     assert.deepEqual(user, {
       email: 'test@example.com',
       avatar: 'https://s.gravatar.com/avatar/55502f40dc8b7c769880b10874abc9d0?s=60'
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   });
 });

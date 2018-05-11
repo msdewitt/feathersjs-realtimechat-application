@@ -4,7 +4,7 @@ const processMessage = require('../../src/hooks/process-message');
 
 describe('\'process-message\' hook', () => {
   let app;
-
+  
   beforeEach(() => {
     // Create a new plain Feathers application
     app = feathers();
