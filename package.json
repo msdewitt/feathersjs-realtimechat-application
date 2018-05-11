@@ -22,10 +22,12 @@
     "npm": ">= 3.0.0"
   },
   "scripts": {
-    "test": "npm run eslint && npm run mocha",
-    "eslint": "eslint src/. test/. --config .eslintrc.json",
+    "test": "npm run eslint && npm run coverage",
+    "coverage": "npm run clean && NODE_ENV=test istanbul cover node_modules/mocha/bin/_mocha -- test/ --recursive --exit",
+    "eslint": "eslint src/. test/. --config .eslintrc.json --fix",
     "start": "node src/",
-    "mocha": "mocha test/ --recursive --exit"
+    "clean": "shx rm -rf test/data/",
+    "mocha": "npm run clean && NODE_ENV=test mocha test/ --recursive --exit"
   },
   "dependencies": {
     "@feathersjs/authentication": "^2.1.5",
@@ -46,8 +48,11 @@
   },
   "devDependencies": {
     "eslint": "^4.19.1",
+    "feathers-memory": "^2.1.1",
+    "istanbul": "^1.1.0-alpha.1",
     "mocha": "^5.1.1",
     "request": "^2.85.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "shx": "^0.2.2"
   }
 }
